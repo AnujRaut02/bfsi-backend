@@ -1,5 +1,6 @@
 package com.anuj.bfsi_backend.service;
 
+import com.anuj.bfsi_backend.exceptions.CustomerNotFoundException;
 import com.anuj.bfsi_backend.model.Customer;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,23 @@ public class CustomerService {
 
     public List<Customer> getAll(){
         return new ArrayList<>(store.values());
+    }
+
+    public Customer update(Long id, Customer updated){
+        Customer existingCustomer = store.get(id);
+        if(existingCustomer==null){
+            throw new CustomerNotFoundException(id);
+        }
+        existingCustomer.setName(updated.getName());
+        existingCustomer.setEmail(updated.getEmail());
+        return existingCustomer;
+    }
+
+    public void delete(Long id){
+        if (!store.containsKey(id)){
+            throw new CustomerNotFoundException(id);
+        }
+        store.remove(id);
     }
 
 }
